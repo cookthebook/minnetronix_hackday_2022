@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Aaron's Super Awesome Webapp</h1>
+
+    <label>Set Strip RGB</label>
+    <br />
+    <button id="warm">Random Warm</button>
+    <button id="cool">Random Cool</button>
+    <br />
+    <label>Red</label>
+    <input id="red" type="number" min="0" max="255" value="$RED" />
+    <label>Green</label>
+    <input id="green" type="number" min="0" max="255" value="$GREEN" />
+    <label>Blue</label>
+    <input id="blue" type="number" min="0" max="255" value="$BLUE" />
+    <br />
+    <button id="setrgb">Set RGB</button>
+
+    <br />
+    <br />
+
+    <label>Set Alarm Time</label>
+    <br />
+    <input id="alarm" type="time" value="$ALARM" />
+    <br />
+    <button id="salarm">Set Alarm</button>
+</body>
+<script>
+    let warm_btn = document.getElementById('warm');
+    let cool_btn = document.getElementById('cool');
+    let rgb_btn = document.getElementById('setrgb')
+    let r = document.getElementById('red')
+    let g = document.getElementById('green')
+    let b = document.getElementById('blue')
+
+    let alarm = document.getElementById('alarm')
+    let alarm_btn = document.getElementById('salarm')
+
+    warm_btn.addEventListener('click', () => {
+        let red = 128 + Math.floor(Math.random()*128);
+        let green = Math.floor(Math.random() * 128);
+        let blue = Math.floor(Math.random()*red);
+
+        r.value = red;
+        g.value = green
+        b.value = blue;
+    });
+
+    cool_btn.addEventListener('click', () => {
+        let blue = 128 + Math.floor(Math.random());
+        let red = Math.floor(Math.random()*blue);
+        let green = Math.floor(Math.random() * 128);
+
+        r.value = red;
+        g.value = green
+        b.value = blue;
+    });
+
+    rgb_btn.addEventListener('click', () => {
+        fetch('/', {
+            body: JSON.stringify({rgb: { r: r.value, g: g.value, b: b.value }}),
+            method: 'POST'
+        }).then((resp) => {
+            console.debug(resp);
+
+            resp.text().then(text => {
+                console.debug(text);
+            });
+        })
+    });
+
+    alarm_btn.addEventListener('click', () => {
+        fetch('/', {
+            method: 'POST',
+            body: JSON.stringify({ alarm: alarm.value })
+        }).then(resp => {
+            console.debug(resp);
+
+            resp.text().then(text => {
+                console.debug(text);
+            });
+        })
+    });
+</script>
+</html>
